@@ -7,7 +7,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 :root{
-  --bg:#f2f2f0;--surface:#fff;--surface2:#f8f8f6;--border:#e0e0db;--border2:#ccccc6;
+  --bg:#f2f2f0;--surface:#fff;--surface2:#f8f8f6;--border:#e0e0db;
   --text:#181816;--text2:#5c5c58;--text3:#9c9c96;
   --accent:#1a56db;--accent-bg:#eff4ff;
   --red:#dc2626;--red-bg:#fef2f2;
@@ -20,6 +20,13 @@
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .header-title{font-family:var(--mono);font-size:13px;font-weight:500}
+.header-right{display:flex;align-items:center;gap:8px}
+.sync-status{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--text3)}
+.sync-dot.ok{background:var(--green)}
+.sync-dot.err{background:var(--red)}
+.sync-dot.loading{background:var(--amber);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:50px;z-index:40}
 .nav::-webkit-scrollbar{display:none}
 .nav-btn{padding:10px 16px;border:none;background:transparent;color:var(--text2);font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
@@ -36,47 +43,39 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 .btn-ghost:hover{background:var(--bg);border-color:var(--border)}
 .btn-danger{color:var(--red);border-color:var(--red);background:transparent}
 .btn-danger:hover{background:var(--red-bg)}
-/* stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;display:inline-block}
 .stat-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .stat-val{font-family:var(--mono);font-size:22px;font-weight:500}
-/* toolbar */
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .search-wrap{position:relative;flex:1;min-width:160px}
 .search-wrap input{width:100%;padding:7px 10px 7px 30px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);font-family:var(--sans);font-size:13px;color:var(--text);outline:none}
 .search-wrap input:focus{border-color:var(--accent)}
 .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px;pointer-events:none}
 .hint{font-size:11px;color:var(--text3);margin-bottom:10px}
-/* company blocks */
 .co-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
 .co-hd{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
 .co-name{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
 .co-cnt{font-family:var(--mono);font-size:11px;color:var(--text3)}
 .co-toggle{color:var(--text3);font-size:11px;transition:transform .2s}
 .co-block.collapsed .co-toggle{transform:rotate(-90deg)}
-.co-body{display:block}
 .co-block.collapsed .co-body{display:none}
-/* table */
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
 th{padding:7px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap}
 td{padding:8px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg)}
-/* stock input */
-.stock-input{font-family:var(--mono);font-size:13px;font-weight:500;width:68px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;text-align:right;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+.stock-input{font-family:var(--mono);font-size:13px;font-weight:500;width:72px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;text-align:right;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
 .stock-input:focus{border-color:var(--accent);background:var(--accent-bg)}
-/* action buttons */
+.stock-input.low{color:var(--red)}
 .action-btns{display:flex;gap:5px;align-items:center}
 .restock-btn{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:5px;border:1px solid var(--green);background:var(--green-bg);color:var(--green);font-family:var(--sans);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
 .restock-btn:hover{background:var(--green);color:#fff}
 .receive-btn{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:5px;border:1px solid var(--blue);background:var(--blue-bg);color:var(--blue);font-family:var(--sans);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
 .receive-btn:hover{background:var(--blue);color:#fff}
-/* modal */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:20px}
 .overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:10px;padding:20px;width:100%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal{background:var(--surface);border-radius:10px;padding:20px;width:100%;max-width:300px;box-shadow:0 8px 32px rgba(0,0,0,.18)}
 .modal-type-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;margin-bottom:10px}
 .modal-type-badge.out{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
 .modal-type-badge.in{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue)}
@@ -84,27 +83,25 @@ tr:hover td{background:var(--bg)}
 .modal-sub{font-size:11px;color:var(--text3);margin-bottom:14px}
 .modal-stock{font-family:var(--mono);font-size:36px;font-weight:500;text-align:center;margin:10px 0 2px}
 .modal-stock-label{font-size:11px;color:var(--text3);text-align:center;margin-bottom:14px}
-.modal-input-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.modal-input-row label{font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap}
-.modal-qty{flex:1;padding:9px 10px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--mono);font-size:20px;text-align:center;color:var(--text);outline:none}
+.modal-input-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;width:100%}
+.modal-input-row label{font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap;flex-shrink:0}
+.modal-qty{width:0;flex:1;min-width:0;padding:9px 10px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--mono);font-size:20px;text-align:center;color:var(--text);outline:none}
 .modal-qty:focus{border-color:var(--accent)}
 .modal-preview{font-size:12px;color:var(--text3);text-align:center;margin-bottom:14px;min-height:18px}
 .modal-preview .after{font-family:var(--mono);font-weight:700}
 .modal-actions{display:flex;flex-direction:column;gap:8px}
-.modal-confirm-out{padding:10px;border:none;border-radius:var(--r);background:var(--green);color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.modal-confirm-out{padding:10px;border:none;border-radius:var(--r);background:var(--green);color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer}
 .modal-confirm-out:hover{background:#166534}
-.modal-confirm-in{padding:10px;border:none;border-radius:var(--r);background:var(--blue);color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.modal-confirm-in{padding:10px;border:none;border-radius:var(--r);background:var(--blue);color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer}
 .modal-confirm-in:hover{background:#1e40af}
 .modal-cancel{padding:9px;border:1px solid var(--border);border-radius:var(--r);background:transparent;color:var(--text2);font-family:var(--sans);font-size:12px;cursor:pointer}
 .modal-cancel:hover{background:var(--bg)}
-/* sales */
 .sales-filter{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
 .sales-filter .form-group{flex:1;min-width:110px}
 .sales-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 .sales-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px}
 .sales-stat-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .sales-stat-val{font-family:var(--mono);font-size:18px;font-weight:500}
-/* history row */
 .hist-item{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);font-size:12px}
 .hist-item:last-child{border-bottom:none}
 .hist-time{font-family:var(--mono);color:var(--text3);font-size:10px;width:108px;flex-shrink:0}
@@ -117,11 +114,9 @@ tr:hover td{background:var(--bg)}
 .hist-qty.out{color:var(--green)}
 .hist-qty.in{color:var(--blue)}
 .hist-after{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap}
-/* snap */
 .snap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .snap-label-text{font-size:13px;font-weight:700}
 .snap-meta{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:2px}
-/* compare */
 .compare-setup{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
 .compare-setup h3{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
 .compare-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
@@ -133,48 +128,58 @@ tr:hover td{background:var(--bg)}
 .delta-pos{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600}
 .delta-neg{font-family:var(--mono);font-size:12px;color:var(--red);font-weight:600}
 .delta-zero{font-family:var(--mono);font-size:12px;color:var(--text3)}
-/* info */
 .info-box{background:var(--amber-bg);border:1px solid #fde68a;border-radius:var(--r);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--amber);line-height:1.7}
 .info-box strong{display:block;font-weight:700;margin-bottom:2px}
-/* form */
 .form-group{display:flex;flex-direction:column;gap:4px}
 .form-group label{font-size:11px;font-weight:700;color:var(--text2)}
 .form-group input,.form-group select{padding:7px 10px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--sans);font-size:13px;color:var(--text);background:var(--surface);outline:none}
 .form-group input:focus,.form-group select:focus{border-color:var(--accent)}
-/* settings */
 .settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;max-width:560px}
 .settings-card h3{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .add-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
 @media(max-width:540px){
   .add-grid{grid-template-columns:1fr 1fr}
-  .stats,.sales-summary{grid-template-columns:1fr 1fr}
   .sales-summary{grid-template-columns:1fr}
-  th.hide-sp,td.hide-sp{display:none}
 }
 .section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .section-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
 .empty{text-align:center;padding:32px;color:var(--text3);font-size:13px}
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:999}
+.loading-screen.hidden{display:none}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;padding:9px 18px;border-radius:30px;font-size:12px;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
+<!-- ローディング画面 -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <div style="font-size:13px;color:var(--text2)">データを読み込んでいます…</div>
+</div>
+
 <div class="header">
   <div class="header-title">御守り在庫管理</div>
-  <button class="btn btn-sm" onclick="exportCSV()">CSV出力</button>
+  <div class="header-right">
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncLabel">接続中</span>
+    </div>
+    <button class="btn btn-sm" onclick="exportCSV()">CSV出力</button>
+  </div>
 </div>
 
 <div class="nav">
   <button class="nav-btn active" onclick="showTab('inventory',this)">在庫一覧</button>
   <button class="nav-btn" onclick="showTab('history',this)">入出庫履歴</button>
-  <button class="nav-btn" onclick="showTab('newyear',this)">正月売上</button>
   <button class="nav-btn" onclick="showTab('settings',this)">設定・品目追加</button>
 </div>
 
 <!-- 在庫一覧 -->
 <div id="tab-inventory" class="panel active">
-  <div class="stats" id="statsBar"></div>
+  <div id="statsBar" style="margin-bottom:14px"></div>
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
@@ -183,11 +188,7 @@ tr:hover td{background:var(--bg)}
     <button class="btn btn-sm" onclick="expandAll()">すべて開く</button>
     <button class="btn btn-sm" onclick="collapseAll()">すべて閉じる</button>
   </div>
-  <p class="hint">
-    在庫数を直接入力＋Enter → 棚卸し更新 ／
-    <span style="color:var(--green);font-weight:700">補充→</span> 売り場へ補充（在庫から引く）／
-    <span style="color:var(--blue);font-weight:700">↓入庫</span> 仕入れ（在庫に足す）
-  </p>
+  <p class="hint">在庫数を直接入力＋Enter → 棚卸し更新 ／ <span style="color:var(--green);font-weight:700">補充→</span> 売り場補充 ／ <span style="color:var(--blue);font-weight:700">↓入庫</span> 仕入れ</p>
   <div id="inventoryContent"></div>
 </div>
 
@@ -218,46 +219,9 @@ tr:hover td{background:var(--bg)}
     <button class="btn btn-primary btn-sm" style="align-self:flex-end" onclick="renderHistory()">絞り込み</button>
     <button class="btn btn-sm" style="align-self:flex-end" onclick="clearFilter()">リセット</button>
   </div>
-  <div class="section-hd"><div class="section-title">記録一覧</div></div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
     <div id="historyList"></div>
   </div>
-</div>
-
-<!-- 正月売上 -->
-<div id="tab-newyear" class="panel">
-  <div class="info-box">
-    <strong>正月期間の売上計算（棚卸し差分方式）</strong>
-    正月は補充記録ができないため、年末と2月頭の棚卸し数の差分で売上を計算します。<br>
-    ① 棚卸し後に在庫数を直接入力して更新 → ② 「記録する」でスナップショット保存 → ③ 2つ選んで比較
-  </div>
-  <div class="section-hd"><div class="section-title">現在の在庫を記録する</div></div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px">
-    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
-      <div class="form-group" style="flex:1;min-width:180px">
-        <label>ラベル</label>
-        <input type="text" id="snapLabel" placeholder="例：2024年末棚卸し">
-      </div>
-      <button class="btn btn-primary" onclick="takeSnapshot()">📷 記録する</button>
-    </div>
-  </div>
-  <div class="section-hd"><div class="section-title">保存済みスナップショット</div></div>
-  <div id="snapList" style="margin-bottom:20px"></div>
-  <div class="compare-setup">
-    <h3>2つを比較して正月売上を計算</h3>
-    <div class="compare-row">
-      <div class="form-group">
-        <label>① 開始（年末）</label>
-        <select id="snapA"><option value="">-- 選択 --</option></select>
-      </div>
-      <div class="form-group">
-        <label>② 終了（2月頭）</label>
-        <select id="snapB"><option value="">-- 選択 --</option></select>
-      </div>
-      <button class="btn btn-primary" onclick="runCompare()">計算する</button>
-    </div>
-  </div>
-  <div id="compareResult"></div>
 </div>
 
 <!-- 設定 -->
@@ -291,13 +255,11 @@ tr:hover td{background:var(--bg)}
     <h3>データ管理</h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-danger" onclick="clearHistory()">入出庫履歴を全削除</button>
-      <button class="btn btn-danger" onclick="clearSnaps()">スナップショットを全削除</button>
-      <button class="btn btn-danger" onclick="resetAll()">全データをリセット</button>
     </div>
   </div>
 </div>
 
-<!-- モーダル（補充・入庫 共用） -->
+<!-- モーダル -->
 <div class="overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-type-badge" id="modalBadge"></div>
@@ -320,119 +282,173 @@ tr:hover td{background:var(--bg)}
 <div class="toast" id="toast"></div>
 
 <script>
-const DEFAULTS=[
-  {id:1,company:'京都奉製',name:'御守',color:'赤',stock:159},
-  {id:2,company:'京都奉製',name:'御守',color:'青',stock:400},
-  {id:3,company:'京都奉製',name:'御守',color:'黄',stock:488},
-  {id:4,company:'京都奉製',name:'御守',color:'白',stock:25},
-  {id:5,company:'京都奉製',name:'御守',color:'ピンク',stock:259},
-  {id:6,company:'京都奉製',name:'御守',color:'紫',stock:14},
-  {id:7,company:'京都奉製',name:'救邪苦守',color:'紺',stock:432},
-  {id:8,company:'京都奉製',name:'救邪苦守',color:'ピンク',stock:-11},
-  {id:9,company:'京都奉製',name:'救邪苦守',color:'桐箱',stock:314},
-  {id:10,company:'京都奉製',name:'子授守',color:'',stock:233},
-  {id:11,company:'京都奉製',name:'健康守',color:'小型',stock:287},
-  {id:12,company:'京都奉製',name:'健守',color:'巾着',stock:571},
-  {id:13,company:'京都奉製',name:'足腰健康守',color:'',stock:-59},
-  {id:14,company:'京都奉製',name:'金運守',color:'',stock:353},
-  {id:15,company:'京都奉製',name:'勝守',color:'',stock:42},
-  {id:16,company:'京都奉製',name:'交通安全守',color:'水色',stock:310},
-  {id:17,company:'京都奉製',name:'交通安全守',color:'白',stock:615},
-  {id:18,company:'京都奉製',name:'交通安全守',color:'ピンク',stock:239},
-  {id:19,company:'京都奉製',name:'交通安全(カード)',color:'紫',stock:7},
-  {id:20,company:'京都奉製',name:'交通安全(カード)',color:'白',stock:248},
-  {id:21,company:'京都奉製',name:'ペット守',color:'首輪',stock:-17},
-  {id:22,company:'京都奉製',name:'ちりめん桜守',color:'',stock:195},
-  {id:23,company:'京都奉製',name:'開運御守',color:'',stock:-4},
-  {id:24,company:'京都奉製',name:'おみくじ',color:'とんぼ玉',stock:1500},
-  {id:25,company:'京都奉製',name:'おみくじ',color:'金像',stock:600},
-  {id:26,company:'京都奉製',name:'御朱印帳',color:'紺',stock:114},
-  {id:27,company:'京都奉製',name:'御朱印帳',color:'ピンク',stock:0},
-  {id:28,company:'京都奉製',name:'厄除守',color:'オレンジ',stock:154},
-  {id:29,company:'京都奉製',name:'厄除守',color:'水色',stock:89},
-  {id:30,company:'京都奉製',name:'厄除守',color:'白',stock:-170},
-  {id:31,company:'井筒',name:'御守(小)',color:'紺',stock:0},
-  {id:32,company:'井筒',name:'ペット守',color:'カプセル',stock:0},
-  {id:33,company:'井筒',name:'ペット守(肉球)',color:'赤',stock:215},
-  {id:34,company:'井筒',name:'ペット守(肉球)',color:'青',stock:209},
-  {id:35,company:'井筒',name:'バイク守',color:'黄緑',stock:93},
-  {id:36,company:'井筒',name:'バイク守',color:'オレンジ',stock:139},
-  {id:37,company:'井筒',name:'バイク守',color:'キティ',stock:190},
-  {id:38,company:'井筒',name:'安産守',color:'キティ',stock:0},
-  {id:39,company:'井筒',name:'おかえりQR守',color:'',stock:0},
-  {id:40,company:'井筒',name:'QRペッド',color:'',stock:136},
-  {id:41,company:'井筒',name:'福来守',color:'がま口',stock:30},
-  {id:42,company:'井筒',name:'トーマス守',color:'',stock:0},
-  {id:43,company:'井筒',name:'ランドセル守',color:'赤',stock:115},
-  {id:44,company:'井筒',name:'ランドセル守',color:'青',stock:56},
-  {id:45,company:'井筒',name:'キティ(NEW)',color:'',stock:0},
-  {id:46,company:'井筒',name:'干支守',color:'',stock:0},
-  {id:47,company:'八福堂',name:'福まゆ',color:'',stock:40},
-  {id:48,company:'丸井紙店',name:'交通安全守',color:'紫',stock:480},
-  {id:49,company:'丸井紙店',name:'交通安全守',color:'オレンジ',stock:320},
-  {id:50,company:'丸井紙店',name:'木札(尺1)',color:'無印',stock:0},
-  {id:51,company:'丸井紙店',name:'木札(尺1)',color:'家内安全',stock:0},
-  {id:52,company:'丸井紙店',name:'木札(尺1)',color:'厄除',stock:0},
-  {id:53,company:'丸井紙店',name:'木札(尺1)',color:'方位除',stock:0},
-  {id:54,company:'丸井紙店',name:'木札(尺5)',color:'',stock:0},
-  {id:55,company:'丸井紙店',name:'神宮大麻',color:'',stock:0},
-  {id:56,company:'レース御守',name:'幸守',color:'白',stock:315},
-  {id:57,company:'レース御守',name:'幸守',color:'青',stock:432},
-  {id:58,company:'レース御守',name:'幸守',color:'黄',stock:446},
-  {id:59,company:'レース御守',name:'幸守',color:'紫',stock:395},
-  {id:60,company:'レース御守',name:'幸守',color:'ピンク',stock:857},
-  {id:61,company:'レース御守',name:'幸守',color:'金',stock:634},
-  {id:62,company:'東和奉産',name:'安産守',color:'',stock:564},
-  {id:63,company:'東和奉産',name:'交通安全キーホルダー',color:'',stock:225},
-  {id:64,company:'秋江',name:'剣先守(御守護)',color:'',stock:0},
-  {id:65,company:'秋江',name:'剣先守',color:'',stock:750},
-  {id:66,company:'その他',name:'合格絵馬',color:'',stock:13},
-  {id:67,company:'その他',name:'孔雀絵馬',color:'',stock:197},
-  {id:68,company:'その他',name:'安産絵馬(孔雀)',color:'',stock:1197},
-  {id:69,company:'その他',name:'開運絵馬',color:'',stock:89},
-  {id:70,company:'その他',name:'おみくじ(ノーマル)',color:'',stock:10000},
-  {id:71,company:'その他',name:'学業鉛筆',color:'',stock:215},
-  {id:72,company:'その他',name:'学業成就守',color:'紫',stock:46},
-  {id:73,company:'その他',name:'学業成就守',color:'赤',stock:54},
-  {id:74,company:'その他',name:'北野守',color:'赤',stock:22},
-  {id:75,company:'その他',name:'北野守',color:'白',stock:0},
-  {id:76,company:'その他',name:'すくすく守(孔雀)',color:'',stock:114},
-  {id:77,company:'その他',name:'縁結び守(もっこく柄)',color:'',stock:128},
-  {id:78,company:'その他',name:'スポーツ守',color:'野球',stock:244},
-  {id:79,company:'その他',name:'スポーツ守',color:'サッカー',stock:101},
-  {id:80,company:'その他',name:'スポーツ守',color:'バスケ',stock:35},
-  {id:81,company:'その他',name:'スポーツ守',color:'バレー',stock:131},
-  {id:82,company:'その他',name:'スポーツ守',color:'テニス',stock:80},
-  {id:83,company:'その他',name:'スポーツ守',color:'バドミントン',stock:78},
-  {id:84,company:'その他',name:'自転車守(丸型)',color:'黒',stock:158},
-  {id:85,company:'その他',name:'自転車守(丸型)',color:'青',stock:-8},
-  {id:86,company:'その他',name:'自転車守(丸型)',color:'赤',stock:81},
-  {id:87,company:'その他',name:'方位除守',color:'黒',stock:-27},
-  {id:88,company:'その他',name:'方位除守',color:'ピンク',stock:0},
-  {id:89,company:'その他',name:'交通安全(まり付)',color:'ピンク',stock:0},
-  {id:90,company:'その他',name:'交通安全(まり付)',color:'オレンジ',stock:0},
-  {id:91,company:'その他',name:'交通ステッカー',color:'孔雀',stock:720},
-  {id:92,company:'その他',name:'交通ステッカー',color:'黒',stock:800},
-  {id:93,company:'その他',name:'うそ鳥',color:'1号',stock:140},
-  {id:94,company:'その他',name:'うそ鳥',color:'2号',stock:301},
-  {id:95,company:'その他',name:'うそ鳥',color:'3号',stock:10},
-  {id:96,company:'その他',name:'御札 久伊豆札',color:'',stock:0},
-  {id:97,company:'その他',name:'御札 かまど札',color:'',stock:0},
-  {id:98,company:'その他',name:'御札 北野天満宮札',color:'',stock:0},
-  {id:99,company:'その他',name:'御札 芯木札',color:'',stock:0},
-  {id:100,company:'その他',name:'御札 安産札',color:'',stock:0},
-  {id:101,company:'その他',name:'お札立て',color:'小',stock:0},
-  {id:102,company:'その他',name:'お札立て',color:'大',stock:0},
-];
+// ── Supabase設定 ──
+const SUPABASE_URL = 'https://suqztjaypyznlqrwfsbs.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_J9RoyNbjlF11pP_GVWv9DA_eYayXKQT';
 
-let S={items:[],log:[],snapshots:[],nextId:200};
+const API = {
+  headers: {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Prefer': 'return=representation'
+  },
+  async get(table, params=''){
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {headers: this.headers});
+    if(!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async post(table, body){
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {method:'POST', headers: this.headers, body: JSON.stringify(body)});
+    if(!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async patch(table, id, body){
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {method:'PATCH', headers: this.headers, body: JSON.stringify(body)});
+    if(!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async delete(table, filter){
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {method:'DELETE', headers: this.headers});
+    if(!r.ok) throw new Error(await r.text());
+  }
+};
+
+// ── State ──
+let items=[], logs=[];
 let modalMode=null, modalItemId=null;
 
-function save(){localStorage.setItem('omamori_v5',JSON.stringify(S))}
-function load(){
-  const d=localStorage.getItem('omamori_v5');
-  if(d){try{S=JSON.parse(d)}catch(e){}}
-  else{S.items=DEFAULTS.map(x=>({...x}));save()}
+// ── 初期データ（初回のみ投入） ──
+const DEFAULTS=[
+  {company:'京都奉製',name:'御守',color:'赤',stock:159},
+  {company:'京都奉製',name:'御守',color:'青',stock:400},
+  {company:'京都奉製',name:'御守',color:'黄',stock:488},
+  {company:'京都奉製',name:'御守',color:'白',stock:25},
+  {company:'京都奉製',name:'御守',color:'ピンク',stock:259},
+  {company:'京都奉製',name:'御守',color:'紫',stock:14},
+  {company:'京都奉製',name:'救邪苦守',color:'紺',stock:432},
+  {company:'京都奉製',name:'救邪苦守',color:'ピンク',stock:-11},
+  {company:'京都奉製',name:'救邪苦守',color:'桐箱',stock:314},
+  {company:'京都奉製',name:'子授守',color:'',stock:233},
+  {company:'京都奉製',name:'健康守',color:'小型',stock:287},
+  {company:'京都奉製',name:'健守',color:'巾着',stock:571},
+  {company:'京都奉製',name:'足腰健康守',color:'',stock:-59},
+  {company:'京都奉製',name:'金運守',color:'',stock:353},
+  {company:'京都奉製',name:'勝守',color:'',stock:42},
+  {company:'京都奉製',name:'交通安全守',color:'水色',stock:310},
+  {company:'京都奉製',name:'交通安全守',color:'白',stock:615},
+  {company:'京都奉製',name:'交通安全守',color:'ピンク',stock:239},
+  {company:'京都奉製',name:'交通安全(カード)',color:'紫',stock:7},
+  {company:'京都奉製',name:'交通安全(カード)',color:'白',stock:248},
+  {company:'京都奉製',name:'ペット守',color:'首輪',stock:-17},
+  {company:'京都奉製',name:'ちりめん桜守',color:'',stock:195},
+  {company:'京都奉製',name:'開運御守',color:'',stock:-4},
+  {company:'京都奉製',name:'おみくじ',color:'とんぼ玉',stock:1500},
+  {company:'京都奉製',name:'おみくじ',color:'金像',stock:600},
+  {company:'京都奉製',name:'御朱印帳',color:'紺',stock:114},
+  {company:'京都奉製',name:'御朱印帳',color:'ピンク',stock:0},
+  {company:'京都奉製',name:'厄除守',color:'オレンジ',stock:154},
+  {company:'京都奉製',name:'厄除守',color:'水色',stock:89},
+  {company:'京都奉製',name:'厄除守',color:'白',stock:-170},
+  {company:'井筒',name:'御守(小)',color:'紺',stock:0},
+  {company:'井筒',name:'ペット守',color:'カプセル',stock:0},
+  {company:'井筒',name:'ペット守(肉球)',color:'赤',stock:215},
+  {company:'井筒',name:'ペット守(肉球)',color:'青',stock:209},
+  {company:'井筒',name:'バイク守',color:'黄緑',stock:93},
+  {company:'井筒',name:'バイク守',color:'オレンジ',stock:139},
+  {company:'井筒',name:'バイク守',color:'キティ',stock:190},
+  {company:'井筒',name:'安産守',color:'キティ',stock:0},
+  {company:'井筒',name:'おかえりQR守',color:'',stock:0},
+  {company:'井筒',name:'QRペッド',color:'',stock:136},
+  {company:'井筒',name:'福来守',color:'がま口',stock:30},
+  {company:'井筒',name:'トーマス守',color:'',stock:0},
+  {company:'井筒',name:'ランドセル守',color:'赤',stock:115},
+  {company:'井筒',name:'ランドセル守',color:'青',stock:56},
+  {company:'井筒',name:'キティ(NEW)',color:'',stock:0},
+  {company:'井筒',name:'干支守',color:'',stock:0},
+  {company:'八福堂',name:'福まゆ',color:'',stock:40},
+  {company:'丸井紙店',name:'交通安全守',color:'紫',stock:480},
+  {company:'丸井紙店',name:'交通安全守',color:'オレンジ',stock:320},
+  {company:'丸井紙店',name:'木札(尺1)',color:'無印',stock:0},
+  {company:'丸井紙店',name:'木札(尺1)',color:'家内安全',stock:0},
+  {company:'丸井紙店',name:'木札(尺1)',color:'厄除',stock:0},
+  {company:'丸井紙店',name:'木札(尺1)',color:'方位除',stock:0},
+  {company:'丸井紙店',name:'木札(尺5)',color:'',stock:0},
+  {company:'丸井紙店',name:'神宮大麻',color:'',stock:0},
+  {company:'レース御守',name:'幸守',color:'白',stock:315},
+  {company:'レース御守',name:'幸守',color:'青',stock:432},
+  {company:'レース御守',name:'幸守',color:'黄',stock:446},
+  {company:'レース御守',name:'幸守',color:'紫',stock:395},
+  {company:'レース御守',name:'幸守',color:'ピンク',stock:857},
+  {company:'レース御守',name:'幸守',color:'金',stock:634},
+  {company:'東和奉産',name:'安産守',color:'',stock:564},
+  {company:'東和奉産',name:'交通安全キーホルダー',color:'',stock:225},
+  {company:'秋江',name:'剣先守(御守護)',color:'',stock:0},
+  {company:'秋江',name:'剣先守',color:'',stock:750},
+  {company:'その他',name:'合格絵馬',color:'',stock:13},
+  {company:'その他',name:'孔雀絵馬',color:'',stock:197},
+  {company:'その他',name:'安産絵馬(孔雀)',color:'',stock:1197},
+  {company:'その他',name:'開運絵馬',color:'',stock:89},
+  {company:'その他',name:'おみくじ(ノーマル)',color:'',stock:10000},
+  {company:'その他',name:'学業鉛筆',color:'',stock:215},
+  {company:'その他',name:'学業成就守',color:'紫',stock:46},
+  {company:'その他',name:'学業成就守',color:'赤',stock:54},
+  {company:'その他',name:'北野守',color:'赤',stock:22},
+  {company:'その他',name:'北野守',color:'白',stock:0},
+  {company:'その他',name:'すくすく守(孔雀)',color:'',stock:114},
+  {company:'その他',name:'縁結び守(もっこく柄)',color:'',stock:128},
+  {company:'その他',name:'スポーツ守',color:'野球',stock:244},
+  {company:'その他',name:'スポーツ守',color:'サッカー',stock:101},
+  {company:'その他',name:'スポーツ守',color:'バスケ',stock:35},
+  {company:'その他',name:'スポーツ守',color:'バレー',stock:131},
+  {company:'その他',name:'スポーツ守',color:'テニス',stock:80},
+  {company:'その他',name:'スポーツ守',color:'バドミントン',stock:78},
+  {company:'その他',name:'自転車守(丸型)',color:'黒',stock:158},
+  {company:'その他',name:'自転車守(丸型)',color:'青',stock:-8},
+  {company:'その他',name:'自転車守(丸型)',color:'赤',stock:81},
+  {company:'その他',name:'方位除守',color:'黒',stock:-27},
+  {company:'その他',name:'方位除守',color:'ピンク',stock:0},
+  {company:'その他',name:'交通安全(まり付)',color:'ピンク',stock:0},
+  {company:'その他',name:'交通安全(まり付)',color:'オレンジ',stock:0},
+  {company:'その他',name:'交通ステッカー',color:'孔雀',stock:720},
+  {company:'その他',name:'交通ステッカー',color:'黒',stock:800},
+  {company:'その他',name:'うそ鳥',color:'1号',stock:140},
+  {company:'その他',name:'うそ鳥',color:'2号',stock:301},
+  {company:'その他',name:'うそ鳥',color:'3号',stock:10},
+  {company:'その他',name:'御札 久伊豆札',color:'',stock:0},
+  {company:'その他',name:'御札 かまど札',color:'',stock:0},
+  {company:'その他',name:'御札 北野天満宮札',color:'',stock:0},
+  {company:'その他',name:'御札 芯木札',color:'',stock:0},
+  {company:'その他',name:'御札 安産札',color:'',stock:0},
+  {company:'その他',name:'お札立て',color:'小',stock:0},
+  {company:'その他',name:'お札立て',color:'大',stock:0},
+];
+
+// ── 同期ステータス ──
+function setSyncStatus(state){
+  const dot=document.getElementById('syncDot');
+  const label=document.getElementById('syncLabel');
+  dot.className='sync-dot '+state;
+  label.textContent=state==='ok'?'同期済み':state==='loading'?'同期中…':'エラー';
+}
+
+// ── 初期化 ──
+async function init(){
+  setSyncStatus('loading');
+  try{
+    items = await API.get('items','order=company,name,color');
+    if(items.length===0){
+      // 初回：デフォルトデータを投入
+      items = await API.post('items', DEFAULTS);
+    }
+    logs = await API.get('log','order=created_at.desc');
+    setSyncStatus('ok');
+  }catch(e){
+    setSyncStatus('err');
+    toast('接続エラー：'+e.message);
+  }
+  document.getElementById('loadingScreen').classList.add('hidden');
+  renderInventory();
 }
 
 // ── Tab ──
@@ -443,7 +459,6 @@ function showTab(name,btn){
   if(btn)btn.classList.add('active');
   if(name==='inventory')renderInventory();
   if(name==='history')initHistory();
-  if(name==='newyear')renderNewyear();
   if(name==='settings')renderSettings();
 }
 
@@ -451,43 +466,37 @@ function showTab(name,btn){
 function renderInventory(){
   renderStats();
   const q=document.getElementById('searchInput').value.trim().toLowerCase();
-  const cos=[...new Set(S.items.map(i=>i.company))];
+  const cos=[...new Set(items.map(i=>i.company))];
   let html='';
   for(const co of cos){
-    let items=S.items.filter(i=>i.company===co);
-    if(q)items=items.filter(i=>
-      i.name.toLowerCase().includes(q)||i.color.toLowerCase().includes(q)||i.company.toLowerCase().includes(q));
-    if(!items.length)continue;
+    let list=items.filter(i=>i.company===co);
+    if(q)list=list.filter(i=>
+      i.name.toLowerCase().includes(q)||
+      (i.color||'').toLowerCase().includes(q)||
+      i.company.toLowerCase().includes(q));
+    if(!list.length)continue;
     html+=`<div class="co-block">
       <div class="co-hd" onclick="toggleCo(this)">
-        <div class="co-name">${co}<span class="co-cnt">${items.length}品目</span></div>
+        <div class="co-name">${co}<span class="co-cnt">${list.length}品目</span></div>
         <span class="co-toggle">▼</span>
       </div>
       <div class="co-body"><div class="tbl-wrap"><table>
-        <thead><tr>
-          <th>品名</th><th>色・種別</th>
-          <th>在庫数</th>
-          <th>操作</th>
-        </tr></thead>
-        <tbody>${items.map(item=>`
-          <tr>
-            <td style="font-weight:500">${item.name}</td>
-            <td style="color:var(--text2)">${item.color||'—'}</td>
-            <td>
-              <input class="stock-input" type="number" value="${item.stock}"
-                style="${item.stock<0?'color:var(--red)':''}"
-                onchange="setStock(${item.id},this)"
-                onkeydown="if(event.key==='Enter')this.blur()"
-                title="棚卸し時に直接入力">
-            </td>
-            <td>
-              <div class="action-btns">
-                <button class="restock-btn" onclick="openModal(${item.id},'out')">補充 →</button>
-                <button class="receive-btn" onclick="openModal(${item.id},'in')">↓ 入庫</button>
-              </div>
-            </td>
-          </tr>`).join('')}
-        </tbody>
+        <thead><tr><th>品名</th><th>色・種別</th><th>在庫数</th><th>操作</th></tr></thead>
+        <tbody>${list.map(item=>{
+          const low=item.stock<=50;
+          const style=low?'color:var(--red)':'';
+          return `<tr>
+            <td style="font-weight:500;${style}">${item.name}</td>
+            <td style="${style||'color:var(--text2)'}">${item.color||'—'}</td>
+            <td><input class="stock-input${low?' low':''}" type="number" value="${item.stock}"
+              onchange="setStock(${item.id},this)"
+              onkeydown="if(event.key==='Enter')this.blur()"></td>
+            <td><div class="action-btns">
+              <button class="restock-btn" onclick="openModal(${item.id},'out')">補充 →</button>
+              <button class="receive-btn" onclick="openModal(${item.id},'in')">↓ 入庫</button>
+            </div></td>
+          </tr>`;
+        }).join('')}</tbody>
       </table></div></div>
     </div>`;
   }
@@ -495,32 +504,34 @@ function renderInventory(){
 }
 
 function renderStats(){
-  const totalStock=S.items.reduce((a,i)=>a+(i.stock>0?i.stock:0),0);
   document.getElementById('statsBar').innerHTML=`
-    <div class="stat"><div class="stat-label">品目数</div><div class="stat-val">${S.items.length}</div></div>
-    <div class="stat"><div class="stat-label">総在庫（倉庫）</div><div class="stat-val">${totalStock.toLocaleString()}</div></div>`;
+    <div class="stat"><div class="stat-label">品目数</div><div class="stat-val">${items.length}</div></div>`;
 }
 
-function setStock(id,input){
+async function setStock(id,input){
   const v=parseInt(input.value);
   if(isNaN(v))return;
-  const item=S.items.find(i=>i.id===id);
+  const item=items.find(i=>i.id===id);
   if(!item)return;
-  item.stock=v;
-  input.style.color=v<0?'var(--red)':'';
-  save();renderStats();
-  toast(`${item.name}${item.color?' '+item.color:''} 在庫 → ${v}`);
+  setSyncStatus('loading');
+  try{
+    await API.patch('items',id,{stock:v});
+    item.stock=v;
+    input.className='stock-input'+(v<=50?' low':'');
+    setSyncStatus('ok');
+    toast(`${item.name}${item.color?' '+item.color:''} 在庫 → ${v}`);
+  }catch(e){setSyncStatus('err');toast('保存エラー');}
 }
 
 function toggleCo(hd){hd.closest('.co-block').classList.toggle('collapsed')}
 function expandAll(){document.querySelectorAll('.co-block').forEach(b=>b.classList.remove('collapsed'))}
 function collapseAll(){document.querySelectorAll('.co-block').forEach(b=>b.classList.add('collapsed'))}
 
-// ── Modal（補充 / 入庫 共用） ──
-function openModal(id, mode){
-  const item=S.items.find(i=>i.id===id);
+// ── Modal ──
+function openModal(id,mode){
+  const item=items.find(i=>i.id===id);
   if(!item)return;
-  modalItemId=id; modalMode=mode;
+  modalItemId=id;modalMode=mode;
   const isOut=mode==='out';
   document.getElementById('modalBadge').textContent=isOut?'補充（出庫）':'入庫';
   document.getElementById('modalBadge').className='modal-type-badge '+(isOut?'out':'in');
@@ -538,7 +549,7 @@ function openModal(id, mode){
 }
 
 function updatePreview(){
-  const item=S.items.find(i=>i.id===modalItemId);
+  const item=items.find(i=>i.id===modalItemId);
   if(!item)return;
   const qty=parseInt(document.getElementById('modalQty').value)||0;
   const after=modalMode==='out'?item.stock-qty:item.stock+qty;
@@ -547,27 +558,39 @@ function updatePreview(){
     `処理後の在庫: <span class="after" style="color:${color}">${after}</span>`;
 }
 
-function confirmModal(){
-  const item=S.items.find(i=>i.id===modalItemId);
+async function confirmModal(){
+  const item=items.find(i=>i.id===modalItemId);
   if(!item)return;
   const qty=parseInt(document.getElementById('modalQty').value);
   if(!qty||qty<1){toast('数量を入力してください');return;}
   const isOut=modalMode==='out';
-  item.stock=isOut?item.stock-qty:item.stock+qty;
-  const now=new Date();
-  S.log.push({
-    id:Date.now(),
-    type:modalMode,
-    itemId:item.id,company:item.company,name:item.name,color:item.color,
-    qty,stockAfter:item.stock,
-    date:now.toISOString(),
-    dateStr:now.toLocaleString('ja-JP')
-  });
-  save();closeModal();renderInventory();
-  toast(isOut
-    ?`補充記録：${item.name}${item.color?' '+item.color:''} × ${qty}`
-    :`入庫記録：${item.name}${item.color?' '+item.color:''} × ${qty}`
-  );
+  const newStock=isOut?item.stock-qty:item.stock+qty;
+  setSyncStatus('loading');
+  try{
+    await API.patch('items',item.id,{stock:newStock});
+    const now=new Date();
+    const logEntry={
+      id:now.getTime(),
+      type:modalMode,
+      item_id:item.id,
+      company:item.company,
+      name:item.name,
+      color:item.color||'',
+      qty,
+      stock_after:newStock,
+      date:now.toISOString(),
+      date_str:now.toLocaleString('ja-JP')
+    };
+    await API.post('log',logEntry);
+    item.stock=newStock;
+    logs.unshift(logEntry);
+    setSyncStatus('ok');
+    closeModal();
+    renderInventory();
+    toast(isOut
+      ?`補充記録：${item.name}${item.color?' '+item.color:''} × ${qty}`
+      :`入庫記録：${item.name}${item.color?' '+item.color:''} × ${qty}`);
+  }catch(e){setSyncStatus('err');toast('保存エラー：'+e.message);}
 }
 
 function closeModal(){
@@ -581,7 +604,7 @@ document.getElementById('modalOverlay').addEventListener('click',e=>{
 // ── History ──
 function initHistory(){
   const sel=document.getElementById('filterCompany');
-  const cos=[...new Set(S.log.map(r=>r.company))];
+  const cos=[...new Set(logs.map(r=>r.company))];
   sel.innerHTML='<option value="">すべて</option>'+cos.map(c=>`<option value="${c}">${c}</option>`).join('');
   renderHistory();
 }
@@ -591,148 +614,73 @@ function renderHistory(){
   const to=document.getElementById('filterTo').value;
   const type=document.getElementById('filterType').value;
   const co=document.getElementById('filterCompany').value;
-  let records=[...S.log].reverse();
+  let records=[...logs];
   if(from)records=records.filter(r=>r.date>=from);
   if(to)records=records.filter(r=>r.date<=to+'T23:59:59');
   if(type)records=records.filter(r=>r.type===type);
   if(co)records=records.filter(r=>r.company===co);
-
   const outTotal=records.filter(r=>r.type==='out').reduce((a,r)=>a+r.qty,0);
   const inTotal=records.filter(r=>r.type==='in').reduce((a,r)=>a+r.qty,0);
-  const outItems=[...new Set(records.filter(r=>r.type==='out').map(r=>r.itemId))].length;
+  const outItems=[...new Set(records.filter(r=>r.type==='out').map(r=>r.item_id))].length;
   document.getElementById('salesSummary').innerHTML=`
     <div class="sales-stat"><div class="sales-stat-label">補充（売上）合計</div><div class="sales-stat-val" style="color:var(--green)">${outTotal.toLocaleString()}</div></div>
     <div class="sales-stat"><div class="sales-stat-label">入庫合計</div><div class="sales-stat-val" style="color:var(--blue)">${inTotal.toLocaleString()}</div></div>
-    <div class="sales-stat"><div class="sales-stat-label">補充品目数</div><div class="sales-stat-val" style="color:var(--text2)">${outItems}</div></div>`;
-
+    <div class="sales-stat"><div class="sales-stat-label">補充品目数</div><div class="sales-stat-val">${outItems}</div></div>`;
   const el=document.getElementById('historyList');
   if(!records.length){el.innerHTML='<div class="empty">該当する記録がありません</div>';return;}
   el.innerHTML=records.map(r=>`
     <div class="hist-item">
-      <span class="hist-time">${r.dateStr}</span>
+      <span class="hist-time">${r.date_str}</span>
       <span class="hist-co">${r.company}</span>
       <span class="hist-name">${r.name}${r.color?' '+r.color:''}</span>
       <span class="hist-badge ${r.type}">${r.type==='out'?'補充':'入庫'}</span>
       <span class="hist-qty ${r.type}">${r.type==='out'?'-':'+'}${r.qty}</span>
-      <span class="hist-after">残${r.stockAfter}</span>
+      <span class="hist-after">残${r.stock_after}</span>
     </div>`).join('');
 }
 
 function clearFilter(){
-  document.getElementById('filterFrom').value='';
-  document.getElementById('filterTo').value='';
-  document.getElementById('filterType').value='';
-  document.getElementById('filterCompany').value='';
+  ['filterFrom','filterTo','filterType','filterCompany'].forEach(id=>document.getElementById(id).value='');
   renderHistory();
-}
-
-// ── Newyear (snapshot) ──
-function takeSnapshot(){
-  const label=document.getElementById('snapLabel').value.trim();
-  if(!label){toast('ラベルを入力してください');return;}
-  S.snapshots.push({
-    id:Date.now(),label,date:new Date().toLocaleString('ja-JP'),
-    data:S.items.map(i=>({id:i.id,company:i.company,name:i.name,color:i.color,stock:i.stock}))
-  });
-  save();document.getElementById('snapLabel').value='';renderNewyear();
-  toast('スナップショットを保存しました');
-}
-
-function renderNewyear(){
-  const el=document.getElementById('snapList');
-  if(!S.snapshots.length){el.innerHTML='<div class="empty">まだ記録がありません</div>';}
-  else{
-    el.innerHTML=[...S.snapshots].reverse().map(s=>`
-      <div class="snap-card">
-        <div>
-          <div class="snap-label-text">${s.label}</div>
-          <div class="snap-meta">${s.date}　${s.data.length}品目</div>
-        </div>
-        <button class="btn btn-sm btn-danger" onclick="deleteSnap(${s.id})">削除</button>
-      </div>`).join('');
-  }
-  ['snapA','snapB'].forEach(sid=>{
-    const sel=document.getElementById(sid);
-    sel.innerHTML='<option value="">-- 選択 --</option>';
-    S.snapshots.forEach(s=>{sel.innerHTML+=`<option value="${s.id}">${s.label}（${s.date}）</option>`});
-  });
-}
-
-function deleteSnap(id){
-  if(!confirm('このスナップショットを削除しますか？'))return;
-  S.snapshots=S.snapshots.filter(s=>s.id!==id);save();renderNewyear();
-}
-
-function runCompare(){
-  const idA=document.getElementById('snapA').value;
-  const idB=document.getElementById('snapB').value;
-  if(!idA||!idB){toast('2つのスナップショットを選んでください');return;}
-  if(idA===idB){toast('異なるスナップショットを選んでください');return;}
-  const sA=S.snapshots.find(s=>s.id==idA);
-  const sB=S.snapshots.find(s=>s.id==idB);
-  const mapA={};sA.data.forEach(d=>{mapA[d.id]=d.stock});
-  const allIds=[...new Set([...sA.data.map(d=>d.id),...sB.data.map(d=>d.id)])];
-  const byCompany={};
-  allIds.forEach(id=>{
-    const ref=sB.data.find(d=>d.id===id)||sA.data.find(d=>d.id===id);
-    if(!byCompany[ref.company])byCompany[ref.company]=[];
-    const stockA=mapA[id]??0;
-    const bItem=sB.data.find(d=>d.id===id);
-    const stockB=bItem?bItem.stock:0;
-    byCompany[ref.company].push({...ref,stockA,stockB,delta:stockA-stockB});
-  });
-  let totalSold=0;
-  Object.values(byCompany).forEach(items=>items.forEach(i=>{if(i.delta>0)totalSold+=i.delta}));
-  let html=`<div class="compare-result">
-    <div class="compare-hd">
-      <div class="compare-hd-title">${sA.label} → ${sB.label}</div>
-      <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--green)">正月売上合計: ${totalSold.toLocaleString()}</div>
-    </div>`;
-  for(const [co,items] of Object.entries(byCompany)){
-    const coSold=items.filter(i=>i.delta>0).reduce((a,i)=>a+i.delta,0);
-    html+=`<div style="border-bottom:1px solid var(--border)">
-      <div class="co-compare-hd"><span>${co}</span><span style="color:var(--green);font-family:var(--mono)">売上: ${coSold}</span></div>
-      <table><thead><tr><th>品名</th><th>色</th><th>${sA.label}</th><th>${sB.label}</th><th>差分</th></tr></thead>
-      <tbody>${items.map(i=>{
-        const dc=i.delta>0?'delta-pos':i.delta<0?'delta-neg':'delta-zero';
-        const dt=i.delta>0?`+${i.delta}`:i.delta===0?'±0':`${i.delta}`;
-        return `<tr><td>${i.name}</td><td style="color:var(--text2)">${i.color||'—'}</td>
-          <td style="font-family:var(--mono)">${i.stockA}</td>
-          <td style="font-family:var(--mono)">${i.stockB}</td>
-          <td><span class="${dc}">${dt}</span></td></tr>`;
-      }).join('')}</tbody></table></div>`;
-  }
-  document.getElementById('compareResult').innerHTML=html+'</div>';
 }
 
 // ── Settings ──
 function renderSettings(){
   document.getElementById('companyList').innerHTML=
-    [...new Set(S.items.map(i=>i.company))].map(c=>`<option value="${c}">`).join('');
+    [...new Set(items.map(i=>i.company))].map(c=>`<option value="${c}">`).join('');
 }
-function addItem(){
-  const co=document.getElementById('addCompany').value.trim();
+
+async function addItem(){
+  const company=document.getElementById('addCompany').value.trim();
   const name=document.getElementById('addName').value.trim();
   const color=document.getElementById('addColor').value.trim();
   const stock=parseInt(document.getElementById('addStock').value)||0;
-  if(!co||!name){toast('会社名と品名は必須です');return;}
-  S.items.push({id:S.nextId++,company:co,name,color,stock});
-  save();
-  document.getElementById('addName').value='';
-  document.getElementById('addColor').value='';
-  document.getElementById('addStock').value='0';
-  toast(`「${co} / ${name}」を追加しました`);
+  if(!company||!name){toast('会社名と品名は必須です');return;}
+  setSyncStatus('loading');
+  try{
+    const [saved]=await API.post('items',{company,name,color,stock});
+    items.push(saved);
+    setSyncStatus('ok');
+    document.getElementById('addName').value='';
+    document.getElementById('addColor').value='';
+    document.getElementById('addStock').value='0';
+    toast(`「${company} / ${name}」を追加しました`);
+    renderInventory();
+  }catch(e){setSyncStatus('err');toast('保存エラー');}
 }
-function clearHistory(){if(!confirm('入出庫履歴をすべて削除しますか？'))return;S.log=[];save();toast('削除しました')}
-function clearSnaps(){if(!confirm('スナップショットをすべて削除しますか？'))return;S.snapshots=[];save();toast('削除しました')}
-function resetAll(){if(!confirm('全データをリセットしますか？'))return;localStorage.removeItem('omamori_v5');location.reload()}
+
+async function clearHistory(){
+  if(!confirm('入出庫履歴をすべて削除しますか？'))return;
+  await API.delete('log','id=gte.0');
+  logs=[];toast('削除しました');
+}
 
 // ── CSV ──
 function exportCSV(){
   const rows=[['会社','品名','色・種別','在庫数（倉庫）']];
-  S.items.forEach(i=>rows.push([i.company,i.name,i.color,i.stock]));
+  items.forEach(i=>rows.push([i.company,i.name,i.color||'',i.stock]));
   rows.push([],[' ── 入出庫履歴 ──'],['日時','種別','会社','品名','色','数量','処理後在庫']);
-  S.log.forEach(r=>rows.push([r.dateStr,r.type==='out'?'補充(出庫)':'入庫',r.company,r.name,r.color,r.qty,r.stockAfter]));
+  logs.forEach(r=>rows.push([r.date_str,r.type==='out'?'補充(出庫)':'入庫',r.company,r.name,r.color||'',r.qty,r.stock_after]));
   const csv=rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
@@ -745,10 +693,10 @@ let _t;
 function toast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('show');
-  clearTimeout(_t);_t=setTimeout(()=>el.classList.remove('show'),2200);
+  clearTimeout(_t);_t=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-load();renderInventory();
+init();
 </script>
 </body>
 </html>
