@@ -47,6 +47,14 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 .edit-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 @media(max-width:400px){.edit-modal-grid{grid-template-columns:1fr}}
 #editOverlay .modal{max-height:90vh;overflow-y:auto;width:calc(100% - 32px);max-width:300px}
+/* テーブル列幅固定 */
+.col-name{width:35%}
+.col-color{width:18%}
+.col-stock{width:14%}
+.col-actions{width:33%}
+/* 設定フォームのグリッド均等 */
+.add-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.add-grid .form-group input{width:100%}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;display:inline-block}
 .stat-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .stat-val{font-family:var(--mono);font-size:22px;font-weight:500}
@@ -511,7 +519,7 @@ function renderInventory(){
         <span class="co-toggle">▼</span>
       </div>
       <div class="co-body"><div class="tbl-wrap"><table>
-        <thead><tr><th>品名</th><th>色・種別</th><th>在庫数</th><th>操作</th></tr></thead>
+        <thead><tr><th class="col-name">品名</th><th class="col-color">色・種別</th><th class="col-stock">在庫数</th><th class="col-actions">操作</th></tr></thead>
         <tbody>${list.map(item=>{
           const low=item.stock<=50;
           const style=low?'color:var(--red)':'';
