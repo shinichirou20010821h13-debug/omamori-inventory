@@ -43,6 +43,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 .btn-ghost:hover{background:var(--bg);border-color:var(--border)}
 .btn-danger{color:var(--red);border-color:var(--red);background:transparent}
 .btn-danger:hover{background:var(--red-bg)}
+/* 編集モーダル */
+.edit-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+@media(max-width:400px){.edit-modal-grid{grid-template-columns:1fr}}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;display:inline-block}
 .stat-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .stat-val{font-family:var(--mono);font-size:22px;font-weight:500}
@@ -255,6 +258,32 @@ tr:hover td{background:var(--bg)}
     <h3>データ管理</h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-danger" onclick="clearHistory()">入出庫履歴を全削除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 編集モーダル -->
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <div style="font-size:14px;font-weight:700;margin-bottom:14px">品目を編集</div>
+    <div class="edit-modal-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label>会社名</label>
+        <input type="text" id="editCompany" list="editCompanyList">
+        <datalist id="editCompanyList"></datalist>
+      </div>
+      <div class="form-group">
+        <label>品名</label>
+        <input type="text" id="editName">
+      </div>
+      <div class="form-group">
+        <label>色・種別</label>
+        <input type="text" id="editColor">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-confirm-in" onclick="saveEdit()">保存する</button>
+      <button class="modal-cancel" onclick="closeEditModal()">キャンセル</button>
     </div>
   </div>
 </div>
@@ -492,9 +521,11 @@ function renderInventory(){
               onchange="setStock(${item.id},this)"
               onkeydown="if(event.key==='Enter')this.blur()"></td>
             <td><div class="action-btns">
-              <button class="restock-btn" onclick="openModal(${item.id},'out')">補充 →</button>
-              <button class="receive-btn" onclick="openModal(${item.id},'in')">↓ 入庫</button>
-            </div></td>
+                <button class="restock-btn" onclick="openModal(${item.id},'out')">補充 →</button>
+                <button class="receive-btn" onclick="openModal(${item.id},'in')">↓ 入庫</button>
+                <button class="btn btn-ghost btn-sm" onclick="openEditModal(${item.id})" title="編集">✏️</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="deleteItem(${item.id})" title="削除">✕</button>
+              </div></td>
           </tr>`;
         }).join('')}</tbody>
       </table></div></div>
@@ -642,6 +673,59 @@ function renderHistory(){
 function clearFilter(){
   ['filterFrom','filterTo','filterType','filterCompany'].forEach(id=>document.getElementById(id).value='');
   renderHistory();
+}
+
+// ── Edit modal ──
+let editingId=null;
+function openEditModal(id){
+  const item=items.find(i=>i.id===id);
+  if(!item)return;
+  editingId=id;
+  document.getElementById('editCompany').value=item.company;
+  document.getElementById('editName').value=item.name;
+  document.getElementById('editColor').value=item.color||'';
+  // company datalist
+  const dl=document.getElementById('editCompanyList');
+  dl.innerHTML=[...new Set(items.map(i=>i.company))].map(c=>`<option value="${c}">`).join('');
+  document.getElementById('editOverlay').classList.add('open');
+}
+async function saveEdit(){
+  const item=items.find(i=>i.id===editingId);
+  if(!item)return;
+  const company=document.getElementById('editCompany').value.trim();
+  const name=document.getElementById('editName').value.trim();
+  const color=document.getElementById('editColor').value.trim();
+  if(!company||!name){toast('会社名と品名は必須です');return;}
+  setSyncStatus('loading');
+  try{
+    await API.patch('items',editingId,{company,name,color});
+    item.company=company;item.name=name;item.color=color;
+    setSyncStatus('ok');
+    closeEditModal();
+    renderInventory();
+    toast('更新しました');
+  }catch(e){setSyncStatus('err');toast('保存エラー');}
+}
+function closeEditModal(){
+  document.getElementById('editOverlay').classList.remove('open');
+  editingId=null;
+}
+document.getElementById('editOverlay').addEventListener('click',e=>{
+  if(e.target===e.currentTarget)closeEditModal();
+});
+
+// ── Delete item ──
+async function deleteItem(id){
+  const item=items.find(i=>i.id===id);
+  if(!item||!confirm(`「${item.name}${item.color?' '+item.color:''}」を削除しますか？`))return;
+  setSyncStatus('loading');
+  try{
+    await API.delete('items',`id=eq.${id}`);
+    items=items.filter(i=>i.id!==id);
+    setSyncStatus('ok');
+    renderInventory();
+    toast('削除しました');
+  }catch(e){setSyncStatus('err');toast('削除エラー');}
 }
 
 // ── Settings ──
