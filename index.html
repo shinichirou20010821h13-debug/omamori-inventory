@@ -504,7 +504,9 @@ function showTab(name,btn){
 function renderInventory(){
   renderStats();
   const q=document.getElementById('searchInput').value.trim().toLowerCase();
-  const cos=[...new Set(items.map(i=>i.company))];
+  const ORDER=['京都奉製','井筒','新日本奉製','濱','大和奉製','丸井紙店','秋江','八福堂','東和奉産','浜島','ユーカワベ'];
+  const allCos=[...new Set(items.map(i=>i.company))];
+  const cos=[...ORDER.filter(c=>allCos.includes(c)),...allCos.filter(c=>!ORDER.includes(c))];
   let html='';
   for(const co of cos){
     let list=items.filter(i=>i.company===co);
